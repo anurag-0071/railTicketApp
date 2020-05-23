@@ -9,7 +9,9 @@
   "main": "app.js",
   "dependencies": {
     "express": "^4.12.3",
-    "swagger-express-mw": "^0.1.0"
+    "mongoose": "^5.9.15",
+    "swagger-express-mw": "^0.1.0",
+    "swagger-router": "^0.7.4"
   },
   "devDependencies": {
     "should": "^7.1.0",
