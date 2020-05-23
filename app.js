@@ -1,23 +1,37 @@
 'use strict';
 
-var SwaggerExpress = require('swagger-express-mw');
-var app = require('express')();
-module.exports = app; // for testing
+const SwaggerExpress = require('swagger-express-mw');
+const app = require('express')();
+const Mongoose = require("mongoose");
+const DB_URL = require("./api/constants/database").URL;
 
-var config = {
-  appRoot: __dirname // required config
-};
+Mongoose.connect(DB_URL, function (err) {
+  if (!err) {
+    console.log("Connected to the DB");
+    const config = {
+      appRoot: __dirname // required config
+    };
 
-SwaggerExpress.create(config, function(err, swaggerExpress) {
-  if (err) { throw err; }
+    SwaggerExpress.create(config, function (err, swaggerExpress) {
+      if (err) { throw err; }
 
-  // install middleware
-  swaggerExpress.register(app);
+      // install middleware
+      swaggerExpress.register(app);
 
-  var port = process.env.PORT || 10010;
-  app.listen(port);
+      const port = process.env.PORT || 10010;
+      app.listen(port);
 
-  if (swaggerExpress.runner.swagger.paths['/hello']) {
-    console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');
+      if (swaggerExpress.runner.swagger.paths['/hello']) {
+        console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');
+      }
+    });
+  } else {
+    console.error("error " + err.message);
   }
 });
+
+
+
+
+module.exports = app; // for testing
+
