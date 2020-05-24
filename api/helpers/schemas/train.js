@@ -5,7 +5,7 @@ const DAYS = require("../constants/days");
 const trainDefinition = {
     _id: Mongoose.Schema.Types.ObjectId,
     name: String,
-    number: Number,
+    number: String,
     sourceStation: {
         id: {
             type: Mongoose.Schema.Types.ObjectId,

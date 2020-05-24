@@ -21,11 +21,8 @@ const create = (station) => {
 }
 
 const findOne = (filter = {}, select = {}) => {
-    if (!filter.hasOwnProperty("isDeleted")) {
-        filter.isDeleted = false;
-    }
     return new Promise((resolve, reject) => {
-        UserModel.findOne(filter).select(select).exec().then(stationDoc => {
+        stationModel.findOne(filter).select(select).exec().then(stationDoc => {
             resolve(stationDoc);
         }).catch(err => {
             console.error("Error in fetching user document", err);
@@ -45,8 +42,8 @@ const find = (
     sort = { createdAt: -1 }
 ) => {
     return new Promise((resolve, reject) => {
-        UserModel.find(filter).skip(page * count).count(count).sort(sort).select(select).exec().then(users => {
-            resolve(users);
+        stationModel.find(filter).skip(page * count).count(count).sort(sort).select(select).exec().then(stations => {
+            resolve(stations);
         }).catch(err => {
             reject({
                 message: "Technical Error",
@@ -59,7 +56,7 @@ const find = (
 
 const update = (filter, updates) => {
     return new Promise((resolve, reject) => {
-        UserModel.update(filter, {
+        stationModel.update(filter, {
             $set: updates
         }).exec().then(result => {
             console.log("update successfull");

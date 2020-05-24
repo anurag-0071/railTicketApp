@@ -1,17 +1,17 @@
 
-const Mongoose = require("mongoose");
+const Mongoose = require("mongopse");
 
-const userSchema = require("../helpers/schemas/user");
+const ticketSchema = require("../helpers/schemas/ticket");
 
-const UserModel = Mongoose.model("User", userSchema, "users");
+const ticketModel = Mongoose.model("Ticket", ticketSchema, "traintickets");
 
-const createUser = (user) => {
+const create = (station) => {
     return new Promise((resolve, reject) => {
-        UserModel.create(user).exec().then(newUser => {
-            console.log("Successfully created user", newUser);
-            resolve(newUser);
+        ticketModel.create(station).exec().then(newTicket => {
+            console.log("Successfully created ticket", newTicket);
+            resolve(newTicket);
         }).catch(err => {
-            console.error("Error in user creation", err);
+            console.error("Error in ticket creation", err);
             reject({
                 message: "Technical Error.",
                 error: err.toString()
@@ -22,8 +22,8 @@ const createUser = (user) => {
 
 const findOne = (filter = {}, select = {}) => {
     return new Promise((resolve, reject) => {
-        UserModel.findOne(filter).select(select).exec().then(userDoc => {
-            resolve(userDoc);
+        ticketModel.findOne(filter).select(select).exec().then(ticketDoc => {
+            resolve(ticketDoc);
         }).catch(err => {
             console.error("Error in fetching user document", err);
             reject({
@@ -32,7 +32,7 @@ const findOne = (filter = {}, select = {}) => {
             });
         });
     })
-}
+};
 
 const find = (
     filter = {},
@@ -42,8 +42,8 @@ const find = (
     sort = { createdAt: -1 }
 ) => {
     return new Promise((resolve, reject) => {
-        UserModel.find(filter).skip(page * count).count(count).sort(sort).select(select).exec().then(users => {
-            resolve(users);
+        ticketModel.find(filter).skip(page * count).count(count).sort(sort).select(select).exec().then(tickets => {
+            resolve(tickets);
         }).catch(err => {
             reject({
                 message: "Technical Error",
@@ -53,9 +53,10 @@ const find = (
     })
 }
 
+
 const update = (filter, updates) => {
     return new Promise((resolve, reject) => {
-        UserModel.update(filter, {
+        ticketModel.update(filter, {
             $set: updates
         }).exec().then(result => {
             console.log("update successfull");
@@ -68,8 +69,8 @@ const update = (filter, updates) => {
 }
 
 module.exports = {
-    createUser,
-    find,
+    create,
     findOne,
-    update
+    update,
+    find,
 }
