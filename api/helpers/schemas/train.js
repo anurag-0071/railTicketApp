@@ -46,11 +46,25 @@ const trainDefinition = {
     status: {
         type: String,
         enum: ["Active, Inactive"]
+    },
+    lastUpdated: Date,
+    createdAt: {
+        type: Date,
+        default: new Date()
     }
 }
 
 
 const trainSchema = new Mongoose.Schema(trainDefinition);
+
+stationSchema.pre("save", function (next) {
+    this.lastUpdated = new Date();
+    next();
+});
+stationSchema.pre("update", function (next) {
+    this.lastUpdated = new Date();
+
+});
 
 module.exports = {
     trainSchema
