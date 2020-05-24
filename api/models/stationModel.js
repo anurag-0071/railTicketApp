@@ -74,5 +74,6 @@ const update = (filter, updates) => {
 module.exports = {
     create,
     findOne,
-    update
+    update,
+    find,
 }
