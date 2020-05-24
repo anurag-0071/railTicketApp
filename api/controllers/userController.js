@@ -113,34 +113,11 @@ const getAdminList = (req, res) => {
     })
 }
 
-const updateUserProfile = (req, res) => {
-    const userId = req.swagger.params.id.value;
-    const data = req.swagger.params.data.value;
-
-    delete data.role;
-    delete data.isNewUser;
-    delete data.salt;
-    delete data.password;
-    delete data.createdAt;
-    delete data.isDeleted;
-
-    UserModel.update({
-        _id: userId
-    }, data).then(result => {
-        console.log("Successfully updated user Profile");
-        res.status(204).send();
-    }).catch(err => {
-        console.error("Error in updating user profile", err);
-        res.status(400).send(err);
-    })
-}
-
 module.exports = {
     createAdmin,
     login,
     signUp,
     getCustomersList,
     getAdminList,
-    updateUserProfile
 }
 
