@@ -21,9 +21,6 @@ const createUser = (user) => {
 }
 
 const findOne = (filter = {}, select = {}) => {
-    if (!filter.hasOwnProperty("isDeleted")) {
-        filter.isDeleted = false;
-    }
     return new Promise((resolve, reject) => {
         UserModel.findOne(filter).select(select).exec().then(userDoc => {
             resolve(userDoc);
@@ -50,7 +47,7 @@ const find = (
         }).catch(err => {
             reject({
                 message: "Technical Error",
-                error: error.toString()
+                error: err.toString()
             })
         })
     })
