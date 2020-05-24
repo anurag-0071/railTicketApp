@@ -53,8 +53,23 @@ const find = (
     })
 }
 
+const update = (filter, updates) => {
+    return new Promise((resolve, reject) => {
+        UserModel.update(filter, {
+            $set: updates
+        }).exec().then(result => {
+            console.log("update successfull");
+            resolve();
+        }).catch(err => {
+            console.log("error in update action", err);
+            reject(err);
+        })
+    })
+}
+
 module.exports = {
     createUser,
     find,
     findOne,
+    update
 }
