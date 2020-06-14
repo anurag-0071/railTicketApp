@@ -5,6 +5,13 @@ const app = require('express')();
 const Mongoose = require("mongoose");
 const DB_URL = require("./api/constants/database").URL;
 
+const logRequest = (req, res, next) => {
+  console.log(req.method, req.originalUrl, req.body)
+  next();
+}
+
+app.use(logRequest)
+
 Mongoose.connect(DB_URL, function (err) {
   if (!err) {
     console.log("Connected to the DB");
@@ -26,6 +33,7 @@ Mongoose.connect(DB_URL, function (err) {
       }
     });
   } else {
+    // 
     console.error("error " + err.message);
   }
 });

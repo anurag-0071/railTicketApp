@@ -42,7 +42,7 @@ const find = (
     sort = { createdAt: -1 }
 ) => {
     return new Promise((resolve, reject) => {
-        stationModel.find(filter).skip(page * count).count(count).sort(sort).select(select).exec().then(stations => {
+        stationModel.find(filter).skip(page * count).sort(sort).limit(count).select(select).exec().then(stations => {
             resolve(stations);
         }).catch(err => {
             reject({

@@ -1,5 +1,5 @@
 
-const Mongoose = require("mongopse");
+const Mongoose = require("mongoose");
 
 const ticketSchema = require("../helpers/schemas/ticket");
 
@@ -42,7 +42,7 @@ const find = (
     sort = { createdAt: -1 }
 ) => {
     return new Promise((resolve, reject) => {
-        ticketModel.find(filter).skip(page * count).count(count).sort(sort).select(select).exec().then(tickets => {
+        ticketModel.find(filter).skip(page * count).sort(sort).limit(count).select(select).exec().then(tickets => {
             resolve(tickets);
         }).catch(err => {
             reject({

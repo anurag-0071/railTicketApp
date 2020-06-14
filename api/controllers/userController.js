@@ -5,12 +5,15 @@ const UserModel = require("../models/userModel");
 
 const createAdmin = (req, res) => {
     const user = req.swagger.params.data.value;
+    console.log("Creating new user now", user);
     if (!user.password) user.password = "password@123";
     user.userType = "Admin";
     user.role = "Admin";
     UserModel.createUser(user).then(newUser => {
         console.log("New user created", newUser._id);
-        res.status(204).send();
+        res.send({
+            message: "Successfully created new Admin"
+        });
     }).catch(err => {
         console.log("Error in user creation", err);
         res.status(400).send(err);
@@ -19,13 +22,12 @@ const createAdmin = (req, res) => {
 
 const login = (req, res) => {
     const params = req.swagger.params.data.value;
-    const username = params.username;
+    const email = params.email;
     const password = params.password;
     UserModel.findOne({
-        username
+        email
     }, {
         _id,
-        username,
         role,
         userType,
         name,
@@ -71,23 +73,35 @@ const signUp = (req, res) => {
     });
 }
 
+const getUserList = (req, res) => {
+
+    const page = req.swagger.params.page.value;
+    const count = req.swagger.params.count.value;
+    const select = req.swagger.params.select.value = "";
+    const sort = req.swagger.params.sort.value;
+
+    select.concat("-password -salt -isNewUser")
+
+    UserModel.find(filter, select, page, count, sort).then(users => {
+        res.send(users)
+    }).catch(err => {
+        res.status(400).send(err);
+    })
+}
+
 const getCustomersList = (req, res) => {
     const filter = {
         userType: "Customer"
     }
     const page = req.swagger.params.page.value;
     const count = req.swagger.params.count.value;
-    const select = req.swagger.params.select.value;
+    const select = req.swagger.params.select.value = "";
     const sort = req.swagger.params.sort.value;
 
-    select.password = -1;
-    select.salt = -1;
-    select.isNewUser = -1;
-
+    select.concat("-password -salt -isNewUser")
     UserModel.find(filter, select, page, count, sort).then(users => {
         res.send(users)
     }).catch(err => {
-        console.error("Error in fetching customers", err);
         res.status(400).send(err);
     })
 }
@@ -98,14 +112,12 @@ const getAdminList = (req, res) => {
     }
     const page = req.swagger.params.page.value;
     const count = req.swagger.params.count.value;
-    const select = req.swagger.params.select.value;
+    const select = req.swagger.params.select.value || "";
     const sort = req.swagger.params.sort.value;
 
-    select.password = -1;
-    select.salt = -1;
-    select.isNewUser = -1;
+    const selectQuery = select.concat("-password -salt -isNewUser")
 
-    UserModel.find(filter, select, page, count, sort).then(users => {
+    UserModel.find(filter, selectQuery, page, count, sort).then(users => {
         res.send(users)
     }).catch(err => {
         console.error("Error in fetching Admins", err);
@@ -135,11 +147,29 @@ const updateUserProfile = (req, res) => {
     })
 }
 
+const getAdminCount = (req, res) => {
+    const filter = {
+        userType: "Admin"
+    };
+    UserModel.getCount(filter).then(count => {
+        console.log("sending count response", {
+            count
+        })
+        res.send({
+            count,
+        })
+    }).catch(err => {
+        res.status(400).send(err);
+    })
+}
+
 module.exports = {
     createAdmin,
+    getAdminCount,
     login,
     signUp,
     getCustomersList,
+    getUserList,
     getAdminList,
     updateUserProfile
 }
