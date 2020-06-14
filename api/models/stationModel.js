@@ -21,6 +21,9 @@ const create = (station) => {
 }
 
 const findOne = (filter = {}, select = {}) => {
+    if (!filter.hasOwnProperty("isDeleted")) {
+        filter.isDeleted = false;
+    }
     return new Promise((resolve, reject) => {
         stationModel.findOne(filter).select(select).exec().then(stationDoc => {
             resolve(stationDoc);

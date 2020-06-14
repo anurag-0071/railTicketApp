@@ -10,7 +10,7 @@ const createUser = (user) => {
         console.log('creating new user now', user);
         UserModel.create(user, (err, newUser) => {
             if (err) {
-                console.error("Error in user creation", err);
+            console.error("Error in user creation", err);
                 if (err.code == 11000) {
                     const errorKey = err.errmsg.split("index: ")[1].split(" ")[0].slice(0, -2)
                     const message = errorKey + ": " + user[errorKey] + " already exists.";
@@ -19,35 +19,16 @@ const createUser = (user) => {
                         error: err.toString()
                     })
                 } else {
-                    reject({
-                        message: "Technical Error.",
-                        error: err.toString()
-                    })
+            reject({
+                message: "Technical Error.",
+                error: err.toString()
+            })
                 }
             } else {
                 console.log("Successfully created user", newUser);
                 resolve(newUser);
             }
         })
-        // UserModel.create(user).then(newUser => {
-        //     console.log("Successfully created user", newUser);
-        //     resolve(newUser);
-        // }).catch(err => {
-        //     console.error("Error in user creation", err);
-        //     if (err.code == 11000) {
-        //         const errorKey = err.errmsg.split("index: ")[1].split(" ")[0].slice(0, -2)
-        //         const message = errorKey + ": " + user[errorKey] + " already exists. Login using your credentials or use a different " + errorKey;
-        //         reject({
-        //             message,
-        //             error: err.toString()
-        //         })
-        //     } else {
-        //         reject({
-        //             message: "Technical Error.",
-        //             error: err.toString()
-        //         })
-        //     }
-        // })
     })
 }
 

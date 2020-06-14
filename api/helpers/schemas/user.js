@@ -26,6 +26,11 @@ const userDefinition = {
         type: String,
         enum: ["Male", "Female"]
     },
+    age: Number,
+    gender: {
+        type: String,
+        enum: ["Male", "Female"]
+    },
     email: {
         type: String,
         required: true,
