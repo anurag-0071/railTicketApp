@@ -4,13 +4,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
 const userDefinition = {
-    _id: Mongoose.Schema.Types.ObjectId,
-    username: {
-        type: String,
-        unique: true,
-        required: true,
-        minLength: 6
-    },
+    // _id: Mongoose.Schema.Types.ObjectId,
     role: {
         type: String,
         enum: ["Admin", "Customer"]
@@ -25,7 +19,12 @@ const userDefinition = {
     },
     phone: {
         type: Number,
-        required: true
+        required: true,
+    },
+    age: Number,
+    gender: {
+        type: String,
+        enum: ["Male", "Female"]
     },
     age: Number,
     gender: {
@@ -34,7 +33,7 @@ const userDefinition = {
     },
     email: {
         type: String,
-        required: true
+        required: true,
     },
     isNewUser: {
         type: Boolean,
@@ -54,6 +53,9 @@ const userDefinition = {
 }
 
 const userSchema = new Mongoose.Schema(userDefinition);
+
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ phone: 1 }, { unique: true });
 
 userSchema.methods.validatePassword = function validatePassword(password) {
     const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, "sha512").toString("hex");
