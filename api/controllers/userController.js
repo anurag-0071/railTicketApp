@@ -5,7 +5,6 @@ const UserModel = require("../models/userModel");
 
 const createAdmin = (req, res) => {
     const user = req.swagger.params.data.value;
-    console.log("Creating new user now", user);
     if (!user.password) user.password = "password@123";
     user.userType = "Admin";
     user.role = "Admin";
