@@ -7,10 +7,12 @@ const createStation = (req, res) => {
     const station = req.swagger.params.data.value;
     StationModel.create(station).then(newStation => {
         console.log("Successfully created station", newStation._id);
-        res.status(204).send();
+        res.send({
+            message: "Successfully created new Station"
+        });
     }).catch(err => {
         console.error("Error in creating new station", err);
-        res.station(400).send(err);
+        res.status(400).send(err);
     })
 }
 
@@ -25,7 +27,7 @@ const getStationById = (req, res) => {
     }).then(station => {
         if (station) {
             console.error("Error in creating new station", err);
-            res.station(400).send(err);
+            res.status(400).send(err);
         } else {
             console.error("Station with id", stationId, "not found");
             res.status(400).send({
@@ -34,7 +36,7 @@ const getStationById = (req, res) => {
         }
     }).catch(err => {
         console.error("Error in fetching station", err);
-        res.station(400).send(err);
+        res.status(400).send(err);
     })
 }
 
@@ -44,7 +46,7 @@ const fetchStationList = (req, res) => {
     const select = req.swagger.params.select.value;
     const sort = req.swagger.params.sort.value;
 
-    StationModel.find(filter, select, page, count, sort).then(stations => {
+    StationModel.find({}, select, page, count, sort).then(stations => {
         res.send(stations)
     }).catch(err => {
         consotle.error("Error in fetching Admins", err);

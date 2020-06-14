@@ -58,7 +58,6 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  
   /users/admin:
     # binds a127 app logic to a route
     x-swagger-router-controller: userController
@@ -138,6 +137,73 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse" 
+
+  ###################### Station APIs ########################
+  
+  /station:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: stationController
+    get:
+      description: fetch list of admins
+      # used as the method name of the controller
+      operationId: fetchStationList
+      parameters:
+        - name: page
+          in: query
+          description: page no for pagination
+          required: false
+          type: number
+        - name: count
+          in: query
+          description: no of trains per page
+          required: false
+          type: number
+        - name: select
+          in: query
+          description: which field to show
+          required: false
+          type: string
+        - name: sort
+          in: query
+          description: sort query
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"          
+    post:
+      description: fetch list of tickets
+      # used as the method name of the controller
+      operationId: createStation
+      parameters:
+        - name: data
+          in: body
+          description: page no for pagination
+          required: true
+          schema: 
+            type: object
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  ###################### Station APIs End ########################
+    
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions

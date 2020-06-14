@@ -15,11 +15,11 @@ const userDefinition = {
     },
     name: {
         type: String,
-        required: true,
+        required: [true, "Name cannot be empty"],
     },
     phone: {
         type: Number,
-        required: true,
+        required: [true, "Phone cannot be empty"],
     },
     age: Number,
     gender: {
@@ -33,7 +33,7 @@ const userDefinition = {
     },
     email: {
         type: String,
-        required: true,
+        required: [true, "Email cannot be empty"],
     },
     isNewUser: {
         type: Boolean,
