@@ -1,21 +1,30 @@
 
 const Mongoose = require("mongoose");
 
-const stationSchema = require("../helpers/schemas/station");
+const stationSchema = require("../helpers/schemas/station").stationSchema;
 
-const stationModel = Mongoose.model("Station", stationSchema, "trainstations");
+const StationModel = Mongoose.model("Station", stationSchema, "trainstations");
 
 const create = (station) => {
     return new Promise((resolve, reject) => {
-        stationModel.create(station).exec().then(newStation => {
-            console.log("Successfully created user", newStation);
+        StationModel.create(station).then(newStation => {
+            console.log("Successfully created station", newStation);
             resolve(newStation);
         }).catch(err => {
-            console.error("Error in station creation", err);
-            reject({
-                message: "Technical Error.",
-                error: err.toString()
-            })
+            console.error("Error in station creation", err.errors);
+            if (err.code == 11000) {
+                const errorKey = err.errmsg.split("index: ")[1].split(" ")[0].slice(0, -2)
+                const message = errorKey + ": " + station[errorKey] + " already exists.";
+                reject({
+                    message,
+                    error: err.toString()
+                })
+            } else {
+                reject({
+                    message: err.toString(),
+                    error: err.toString()
+                })
+            }
         })
     })
 }
@@ -25,7 +34,7 @@ const findOne = (filter = {}, select = {}) => {
         filter.isDeleted = false;
     }
     return new Promise((resolve, reject) => {
-        stationModel.findOne(filter).select(select).exec().then(stationDoc => {
+        StationModel.findOne(filter).select(select).exec().then(stationDoc => {
             resolve(stationDoc);
         }).catch(err => {
             console.error("Error in fetching user document", err);
@@ -42,10 +51,10 @@ const find = (
     select = {},
     page = 0,
     count = 10,
-    sort = { createdAt: -1 }
+    sort = { lastUpdated: -1 }
 ) => {
     return new Promise((resolve, reject) => {
-        stationModel.find(filter).skip(page * count).sort(sort).limit(count).select(select).exec().then(stations => {
+        StationModel.find(filter).sort(sort).skip(page * count).limit(count).select(select).exec().then(stations => {
             resolve(stations);
         }).catch(err => {
             reject({
@@ -59,7 +68,7 @@ const find = (
 
 const update = (filter, updates) => {
     return new Promise((resolve, reject) => {
-        stationModel.update(filter, {
+        StationModel.update(filter, {
             $set: updates
         }).exec().then(result => {
             console.log("update successfull");
