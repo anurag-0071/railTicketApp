@@ -44,8 +44,8 @@ const fetchStationList = (req, res) => {
     const select = req.swagger.params.select.value;
     const sort = req.swagger.params.sort.value;
 
-    UserModel.find(filter, select, page, count, sort).then(users => {
-        res.send(users)
+    StationModel.find(filter, select, page, count, sort).then(stations => {
+        res.send(stations)
     }).catch(err => {
         consotle.error("Error in fetching Admins", err);
         res.status(400).send(err);

@@ -18,17 +18,32 @@ consumes:
 produces:
   - application/json
 paths:
-  /hello:
+  /users:
     # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
+    x-swagger-router-controller: user.controller.js
     get:
-      description: Returns 'Hello' to the caller
+      description: fetch list of users
       # used as the method name of the controller
-      operationId: hello
+      operationId: getUserList
       parameters:
-        - name: name
+        - name: page
           in: query
-          description: The name of the person to whom to say hello
+          description: page no for pagination
+          required: false
+          type: string
+        - name: count
+          in: query
+          description: no of trains per page
+          required: false
+          type: string
+        - name: select
+          in: query
+          description: which field to show
+          required: false
+          type: string
+        - name: sort
+          in: query
+          description: sort query
           required: false
           type: string
       responses:
@@ -42,6 +57,87 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+  
+  /users/admin:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: userController
+    get:
+      description: fetch list of admins
+      # used as the method name of the controller
+      operationId: getAdminList
+      parameters:
+        - name: page
+          in: query
+          description: page no for pagination
+          required: false
+          type: number
+        - name: count
+          in: query
+          description: no of trains per page
+          required: false
+          type: number
+        - name: select
+          in: query
+          description: which field to show
+          required: false
+          type: string
+        - name: sort
+          in: query
+          description: sort query
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"          
+    post:
+      description: fetch list of tickets
+      # used as the method name of the controller
+      operationId: createAdmin
+      parameters:
+        - name: data
+          in: body
+          description: page no for pagination
+          required: true
+          schema: 
+            type: object
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /users/admin/count:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: userController
+    get:
+      description: fetch count of admins
+      # used as the method name of the controller
+      operationId: getAdminCount
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: object
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse" 
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions

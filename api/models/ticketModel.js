@@ -1,17 +1,17 @@
 
 const Mongoose = require("mongoose");
 
-const stationSchema = require("../helpers/schemas/station");
+const ticketSchema = require("../helpers/schemas/ticket");
 
-const stationModel = Mongoose.model("Station", stationSchema, "trainstations");
+const ticketModel = Mongoose.model("Ticket", ticketSchema, "traintickets");
 
 const create = (station) => {
     return new Promise((resolve, reject) => {
-        stationModel.create(station).exec().then(newStation => {
-            console.log("Successfully created user", newStation);
-            resolve(newStation);
+        ticketModel.create(station).exec().then(newTicket => {
+            console.log("Successfully created ticket", newTicket);
+            resolve(newTicket);
         }).catch(err => {
-            console.error("Error in station creation", err);
+            console.error("Error in ticket creation", err);
             reject({
                 message: "Technical Error.",
                 error: err.toString()
@@ -21,12 +21,9 @@ const create = (station) => {
 }
 
 const findOne = (filter = {}, select = {}) => {
-    if (!filter.hasOwnProperty("isDeleted")) {
-        filter.isDeleted = false;
-    }
     return new Promise((resolve, reject) => {
-        stationModel.findOne(filter).select(select).exec().then(stationDoc => {
-            resolve(stationDoc);
+        ticketModel.findOne(filter).select(select).exec().then(ticketDoc => {
+            resolve(ticketDoc);
         }).catch(err => {
             console.error("Error in fetching user document", err);
             reject({
@@ -45,8 +42,8 @@ const find = (
     sort = { createdAt: -1 }
 ) => {
     return new Promise((resolve, reject) => {
-        stationModel.find(filter).skip(page * count).sort(sort).limit(count).select(select).exec().then(stations => {
-            resolve(stations);
+        ticketModel.find(filter).sort(sort).skip(page * count).limit(count).select(select).exec().then(tickets => {
+            resolve(tickets);
         }).catch(err => {
             reject({
                 message: "Technical Error",
@@ -59,7 +56,7 @@ const find = (
 
 const update = (filter, updates) => {
     return new Promise((resolve, reject) => {
-        stationModel.update(filter, {
+        ticketModel.update(filter, {
             $set: updates
         }).exec().then(result => {
             console.log("update successfull");
